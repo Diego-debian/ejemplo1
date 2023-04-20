@@ -1,0 +1,7 @@
+create database tiendaDeportiva;
+use tiendaDeportiva;
+create table inventarioProductos(idProducto int(10) primary key auto_increment, codigo varchar(50), precio int(10), disponible tinyint(1));
+create user "adminVentas"@"localhost" identified by "Admin12345.";
+grant all privileges on tiendaDeportiva . * to "adminVentas"@"localhost";
+flush privileges;
+
