@@ -77,23 +77,37 @@ def guardar_edicion(id):
         conexion.close()
         return render_template('editar-producto.html', results=response)
     render_template('crear-producto.html')
-
+    
 
     
 
 # Ruta para eliminar productos (DELETE)
-@appInventario.route('/eliminarproducto/<string:id>', methods=['POST'])
+@appInventario.route('/eliminarproducto/<string:id>', methods=['GET','POST'])
 def eliminar_producto(id):
-    conexion = mysql.connector.connect(**config)
-    miCursor = conexion.cursor()
-    query ="delete from inventarioProductos where idProducto=%s"
-    val = (id,)
-    miCursor.execute(query, val)
-    response = miCursor.rowcount
-    conexion.commit()
-    miCursor.close()
-    conexion.close()
-    return redirect('/inventarioproductos')
+    if request.method=='GET':
+        conexion = mysql.connector.connect(**config)
+        miCursor = conexion.cursor()
+        query ="select * from inventarioProductos where idProducto=%s"
+        val = (id,)
+        miCursor.execute(query, val)
+        response = miCursor.fetchone()
+        conexion.commit()
+        miCursor.close()
+        conexion.close()
+        return render_template('borrar-producto.html', results=response)
+        
+
+    elif request.method=='POST':    
+        conexion = mysql.connector.connect(**config)
+        miCursor = conexion.cursor()
+        query ="delete from inventarioProductos where idProducto=%s"
+        val = (id,)
+        miCursor.execute(query, val)
+        response = miCursor.rowcount
+        conexion.commit()
+        miCursor.close()
+        conexion.close()
+        return redirect('/inventarioproductos')
 
 if __name__ == "__main__":
     appInventario.run(debug=True)
